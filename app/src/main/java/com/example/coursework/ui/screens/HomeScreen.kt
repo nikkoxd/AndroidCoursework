@@ -3,6 +3,7 @@ package com.example.coursework.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,13 +23,14 @@ import com.example.coursework.ui.components.CurrentInfo
 import com.example.coursework.ui.components.ThreeDaysInfo
 import com.example.coursework.ui.components.TodayInfo
 import com.example.coursework.weatherIconMap
+import java.lang.Error
 
 @Composable
 fun HomeScreen (weatherUiState: WeatherUiState, modifier: Modifier = Modifier) {
     when (weatherUiState) {
         is WeatherUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is WeatherUiState.Success -> WeatherScreen(weatherUiState.weather, modifier)
-        is WeatherUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
+        is WeatherUiState.Error -> ErrorScreen(weatherUiState.error, modifier = modifier.fillMaxSize())
     }
 }
 
@@ -40,9 +42,15 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
-        Text("Loading failed.", modifier = Modifier.align(Alignment.Center))
+fun ErrorScreen(error: Exception, modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Text("Loading failed.")
+        Spacer(Modifier.height(8.dp))
+        Text(error.message ?: "Unknown error")
     }
 }
 

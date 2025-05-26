@@ -18,7 +18,7 @@ import java.io.IOException
 
 sealed interface WeatherUiState {
     data class Success(val weather: ForecastResponse) : WeatherUiState
-    data object Error : WeatherUiState
+    data class Error(val error: Exception) : WeatherUiState
     data object Loading : WeatherUiState
 }
 
@@ -36,9 +36,9 @@ class WeatherViewModel(private val weatherRepository: WeatherRepository) : ViewM
             weatherUiState = try {
                 WeatherUiState.Success(weatherRepository.getForecast(city))
             } catch (e: IOException) {
-                WeatherUiState.Error
+                WeatherUiState.Error(e)
             } catch (e: HttpException) {
-                WeatherUiState.Error
+                WeatherUiState.Error(e)
             }
         }
     }
